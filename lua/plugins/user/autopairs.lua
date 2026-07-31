@@ -1,29 +1,12 @@
+-- Single source of truth for nvim-autopairs.
+-- AstroNvim already sets `check_ts = true`, `ts_config = { java = false }`, `fast_wrap` and the
+-- completion integration, so only the deltas belong here — lazy.nvim deep-merges these opts.
+---@type LazySpec
 return {
   "windwp/nvim-autopairs",
-  event = { "InsertEnter" },
-  dependencies = {
-    "hrsh7th/nvim-cmp",
+  opts = {
+    ts_config = {
+      lua = { "string" }, -- don't add pairs in lua string treesitter nodes
+    },
   },
-  config = function()
-    -- import nvim-autopairs
-    local autopairs = require "nvim-autopairs"
-
-    -- configure autopairs
-    autopairs.setup {
-      check_ts = true, -- enable treesitter
-      ts_config = {
-        lua = { "string" }, -- don't add pairs in lua string treesitter nodes
-        java = false, -- migth not need
-      },
-    }
-
-    -- import nvim-autopairs completion functionality
-    local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-
-    -- import nvim-cmp plugin (completions plugin)
-    local cmp = require "cmp"
-
-    -- make autopairs and completion work together
-    cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
-  end,
 }

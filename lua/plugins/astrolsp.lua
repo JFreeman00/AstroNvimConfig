@@ -5,7 +5,7 @@ return {
   opts = {
     features = {
       codelens = true,
-      inlay_hints = false,
+      inlay_hints = true, -- powers the `ts_ls` hint settings in `plugins/user/typescript.lua`; `<Leader>uH` toggles per buffer
       semantic_tokens = true,
     },
     formatting = {
@@ -75,7 +75,7 @@ return {
           function() require("astrolsp.toggles").buffer_semantic_tokens() end,
           desc = "Toggle LSP semantic highlight (buffer)",
           cond = function(client)
-            return client.supports_method "textDocument/semanticTokens/full" and vim.lsp.semantic_tokens ~= nil
+            return client:supports_method "textDocument/semanticTokens/full" and vim.lsp.semantic_tokens ~= nil
           end,
         },
         ["<Leader>lh"] = {
@@ -89,16 +89,15 @@ return {
           cond = "textDocument/hover",
         },
         ["<Leader>ld"] = {
-            function()
-              vim.diagnostic.open_float(nil, {
-                focusable = true,
-                border = "rounded",
-                source = "always",
-                scope = "cursor",
-              })
-            end,
-            desc = "Show diagnostics (persistent)",
-          },
+          function()
+            vim.diagnostic.open_float(nil, {
+              focusable = true,
+              border = "rounded",
+              source = "always",
+              scope = "cursor",
+            })
+          end,
+          desc = "Show diagnostics (persistent)",
         },
       },
       i = {
@@ -108,8 +107,7 @@ return {
           cond = "textDocument/signatureHelp",
         },
       },
-      
-   
+    },
     -- Custom on_attach function
     on_attach = function(client, bufnr)
       -- Optional: disable semanticTokensProvider for all clients

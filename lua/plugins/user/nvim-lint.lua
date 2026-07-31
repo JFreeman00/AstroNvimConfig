@@ -2,6 +2,11 @@
 return {
   "mfussenegger/nvim-lint",
   event = { "BufReadPre", "BufNewFile" },
+  -- The linters below are Mason packages, and mason.nvim is what puts
+  -- `~/.local/share/nvim/mason/bin` on $PATH. Without this dependency nvim-lint can run before
+  -- mason has loaded and every linter fails with "ENOENT: no such file or directory".
+  -- (AstroNvim v5 force-loaded mason from its treesitter spec; v6 no longer does.)
+  dependencies = { "mason-org/mason.nvim" },
   config = function()
     local lint = require "lint"
 
